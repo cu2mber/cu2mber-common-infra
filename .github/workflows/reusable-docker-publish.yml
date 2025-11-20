@@ -1,0 +1,44 @@
+name: Reusable Docker Build & Push
+
+on:
+  workflow_call:
+    inputs:
+      image-name:
+        required: true
+        type: string
+      use-github-token:
+        required: false
+        type: boolean
+        default: false
+      github-pat:
+        required: false
+        type: string
+      build-args:
+        required: false
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: GHCR login
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ inputs.use-github-token && github.token || inputs.github-pat }}
+
+      - name: Build Docker image
+        run: |
+          if [ -n "${{ inputs.build-args }}" ]; then
+            docker build --build-arg ${{ inputs.build-args }} -t ghcr.io/${{ github.repository_owner }}/${{ inputs['image-name'] }}:latest .
+          else
+            docker build -t ghcr.io/${{ github.repository_owner }}/${{ inputs['image-name'] }}:latest .
+          fi
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/${{ inputs['image-name'] }}:latest
