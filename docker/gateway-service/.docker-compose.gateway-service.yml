@@ -1,0 +1,16 @@
+services:
+  gateway-service:
+    image: ghcr.io/cu2mber/gateway-service:latest
+    container_name: eureka-service
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env.gateway-service
+    volumes:
+      - ./logs:/logs
+    networks:
+      - cu2mber-net
+
+networks:
+  cu2mber-net:
+    external: true
