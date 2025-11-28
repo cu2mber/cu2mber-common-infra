@@ -1,7 +1,7 @@
 services:
   gateway-service:
     image: ghcr.io/cu2mber/gateway-service:latest
-    container_name: eureka-service
+    container_name: gateway-service
     ports:
       - "8080:8080"
     env_file:
