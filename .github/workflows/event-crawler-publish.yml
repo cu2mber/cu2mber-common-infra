@@ -1,8 +1,18 @@
 name: Event-Crawler Docker Publish
 
 on:
+  workflow_call:
+    inputs:
+      image-name:
+        required: true
+        type: string
+      use-github-token:
+        required: true
+        type: boolean
+
   push:
-    branches: [ "dev" ] # dev 브랜치에 푸시될 때만 실행
+    branches: [ "dev" ]
+
 
 jobs:
   build_and_push:
@@ -12,9 +22,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: dev
-
-      - name: Go to event-crawler directory
-        run: cd event-crawler
 
       - name: Call reusable docker publish
         uses: ./.github/workflows/reusable-docker-publish.yml
