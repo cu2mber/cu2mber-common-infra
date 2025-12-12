@@ -1,0 +1,23 @@
+name: Event-Crawler Docker Publish
+
+on:
+  push:
+    branches: [ "dev" ] # dev 브랜치에 푸시될 때만 실행
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: dev
+
+      - name: Go to event-crawler directory
+        run: cd event-crawler
+
+      - name: Call reusable docker publish
+        uses: ./.github/workflows/reusable-docker-publish.yml
+        with:
+          image-name: event-crawler
+          use-github-token: true

@@ -1,0 +1,16 @@
+services:
+  event-crawler:
+    image: ghcr.io/cu2mber/event-crawler:latest
+    container_name: event-crawler
+    ports:
+      - "8084:8084"
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/logs
+    networks:
+      - cu2mber-net
+
+networks:
+  cu2mber-net:
+    external: true
